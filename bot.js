@@ -312,7 +312,8 @@ async function workOnIssue(
         active = {
           username,
           startedAt: new Date().toISOString(),
-          pullRequest: null
+          pullRequest: null,
+          pullRequestAbsenceWarned: false
         }
         say(
           `@${username} คุณได้รับมอบหมายในการทำ Issue นี้แล้ว~ 😃`,
