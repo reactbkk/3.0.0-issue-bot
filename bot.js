@@ -135,7 +135,7 @@ async function main() {
  * @prop {string} username
  * @prop {string} startedAt
  * @prop {boolean | undefined | null} [pullRequestAbsenceWarned]
- * @prop {{ owner: string, repo: string, number: number } | null} pullRequest
+ * @prop {{ owner: string, repo: string, number: number, invalid?: string } | null} pullRequest
  */
 
 /**
@@ -263,6 +263,18 @@ async function workOnIssue(
       } finally {
         processedComments[comment.id] = true
       }
+    }
+
+    if (active && active.pullRequest && active.pullRequest.invalid) {
+      const reason = active.pullRequest.invalid
+      active.pullRequest = null
+      active.startedAt = new Date().toISOString()
+      say(
+        `@${active.username} ` +
+          `เราพบว่า pull request ของคุณไม่ถูกต้อง เนื่องจาก ${reason} ` +
+          `กรุณาเปิด pull request ใหม่ และทำงานยืนยันการจองอีกครั้ง ` +
+          `โดยให้นำ URL ของ pull request ใหม่มาคอมเม้นต์ครับ`
+      )
     }
 
     if (!active || isExpired(active)) {
