@@ -128,6 +128,7 @@ async function main() {
  * @typedef {Object} ActiveIssue
  * @prop {string} username
  * @prop {string} startedAt
+ * @prop {boolean | undefined | null} [pullRequestAbsenceWarned]
  * @prop {{ owner: string, repo: string, number: number } | null} pullRequest
  */
 
@@ -259,6 +260,17 @@ async function workOnIssue(
     }
 
     if (!active || isExpired(active)) {
+      if (!queuedUsers.length && active && !active.pullRequest) {
+        if (!active.pullRequestAbsenceWarned) {
+          active.pullRequestAbsenceWarned = true
+          say(
+            `@${
+              active.username
+            } คุณยังไม่ได้ยืนยันการจองโดยการนำ URL ของ pull request มาคอมเม้นต์ใน issue นี้ภายใน 1 ชั่วโมง ` +
+              `หากคุณยังไม่ยืนยันการจองและมีคนมาจองต่อ ทางเราขอสงวนสิทธิ์ในการมอบหมายงานให้คนถัดไปนะครับ`
+          )
+        }
+      }
       while (queuedUsers.length) {
         const username = queuedUsers.shift()
         if (!username) {
