@@ -7,7 +7,7 @@ const APP_URL = 'https://github.com/apps/connor'
 const jwt = require('jsonwebtoken')
 const axios = require('axios').default
 const log = require('pino')({ prettyPrint: true })
-
+const stripSpaces = x => String(x).replace(/\s+/g, '')
 const pk = require('fs').readFileSync('config/github-app-private-key.pem')
 const serviceAccount = JSON.parse(
   require('fs').readFileSync('config/firebase-service-account.json', 'utf8')
@@ -97,7 +97,7 @@ async function main() {
           '</details>'
         ].join('\n')
         const oldBody = (await githubClient.get(url)).data.body
-        if (oldBody !== body) {
+        if (stripSpaces(oldBody) !== stripSpaces(body)) {
           await githubClient.patch(url, {
             body
           })
