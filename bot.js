@@ -63,41 +63,47 @@ async function main() {
       if (commentId) {
         const url = `https://api.github.com/repos/${owner}/${repo}/issues/comments/${commentId}`
         const startTime = new Date((newDoc.data() || {}).startAt)
-        await githubClient.patch(url, {
-          body: [
-            '## โปรดอ่านก่อน',
-            '',
-            `Issue นี้ จะเปิดให้จองตอน ${startTime}`,
-            '',
-            `1. จอง issue โดย comment คำว่า “แย่งบัตรไม่ทัน งั้นขอจอง issue นี้นะ” ใน issue ` +
-              ` โดยผู้ได้สิทธิการทำ issue นั้นคือผู้ที่ comment คนแรกสุด และ timestamp ต้องเป็นภายหลังเวลาเริ่มจองเท่านั้น`,
-            `2. เมื่อถึงคิว ให้ส่ง pull request โดย prefix ว่า <code>[WIP] </code> (Work in progress) ` +
-              `และนำ URL ของ pull request มาใส่ในคอมเม้นต์เพื่อยืนยันการจอง ภายใน 1 ชั่วโมง ` +
-              `โดยขอสงวนสิทธิ์ในการมอบหมายงานให้คนถัดไปที่อยู่ในคิว หากไม่พบ pull request ภายใน 1 ชั่วโมง`,
-            `3. ให้ update pull request (push commit เพิ่ม) อย่างน้อยทุกวันเพื่อทีมงานจะได้เข้าไปให้ feedback ได้ตั้งแต่ต้น ` +
-              `ถ้า pull request ไม่ได้ update ทุกวัน ทีมงานขอสงวนสิทธิในการปิด (close) pull request ` +
-              `และให้สิทธิท่านถัดไปที่จอง โดยจะมีระบบแจ้งเตือนก่อนหมดวัน`,
-            `4. มีเวลา 5 วัน (120 ชั่วโมง) หลังจากเวลาที่จอง ในการทำ issue ให้สำเร็จ ` +
-              `โดยจะถือว่าเสร็จสิ้นภารกิจเมื่อ pull request นั้นถูก merge โดยทีมงาน ` +
-              `ดังนั้นควรเผื่อเวลาให้ทีมงานตรวจสอบและ feedback ไว้ด้วย ` +
-              `(ในกรณีที่เป็น issue ที่เกี่ยวข้องกับ repository ภายนอก ให้ถือว่าทำสำเร็จเมื่อ pull request นั้นถูก merge โดยทีมที่ดูแล repository นั้น ๆ หรือทีมงาน React Bangkok approve โดยการปิด issue)`,
-            `5. หลังจากที่ทำภารกิจเสร็จสิ้น และ issue ของ reactbkk ถูกปิดเรียบร้อย ` +
-              `ให้เข้าไปที่ https://reactbkk.com/3.0.0/#free-tickets เพื่อรับรหัสในการรับบัตรเข้างานฟรี`,
-            `6. สงวนสิทธิ 1 account ต่อ 1 issue เท่านั้น กล่าวคือไม่สามารถเป็นเจ้าของ issue ได้มากกว่า 1 อันในช่วงเวลาใดเวลาหนึ่ง ` +
-              `และไม่สามารถเป็นเจ้าของ issue อื่นได้ หากได้ทำภารกิจสำเร็จไปแล้ว`,
-            '',
-            '<p align="right">connor[bot] is hosted by <a href="https://bangmod.cloud/">Bangmod.Cloud</a>.</p>',
-            '',
-            '<details><summary>Internal state</summary>',
-            '',
-            '```json',
-            JSON.stringify(newDoc.data(), null, 2),
-            '```',
-            '',
-            '</details>'
-          ].join('\n')
-        })
-        log.info('Updated comment.')
+        const body = [
+          '## โปรดอ่านก่อน',
+          '',
+          `Issue นี้ จะเปิดให้จองตอน ${startTime}`,
+          '',
+          `1. จอง issue โดย comment คำว่า “แย่งบัตรไม่ทัน งั้นขอจอง issue นี้นะ” ใน issue ` +
+            ` โดยผู้ได้สิทธิการทำ issue นั้นคือผู้ที่ comment คนแรกสุด และ timestamp ต้องเป็นภายหลังเวลาเริ่มจองเท่านั้น`,
+          `2. เมื่อถึงคิว ให้ส่ง pull request โดย prefix ว่า <code>[WIP] </code> (Work in progress) ` +
+            `และนำ URL ของ pull request มาใส่ในคอมเม้นต์เพื่อยืนยันการจอง ภายใน 1 ชั่วโมง ` +
+            `โดยขอสงวนสิทธิ์ในการมอบหมายงานให้คนถัดไปที่อยู่ในคิว หากไม่พบ pull request ภายใน 1 ชั่วโมง`,
+          `3. ให้ update pull request (push commit เพิ่ม) อย่างน้อยทุกวันเพื่อทีมงานจะได้เข้าไปให้ feedback ได้ตั้งแต่ต้น ` +
+            `ถ้า pull request ไม่ได้ update ทุกวัน ทีมงานขอสงวนสิทธิในการปิด (close) pull request ` +
+            `และให้สิทธิท่านถัดไปที่จอง โดยจะมีระบบแจ้งเตือนก่อนหมดวัน`,
+          `4. มีเวลา 5 วัน (120 ชั่วโมง) หลังจากเวลาที่จอง ในการทำ issue ให้สำเร็จ ` +
+            `โดยจะถือว่าเสร็จสิ้นภารกิจเมื่อ pull request นั้นถูก merge โดยทีมงาน ` +
+            `ดังนั้นควรเผื่อเวลาให้ทีมงานตรวจสอบและ feedback ไว้ด้วย ` +
+            `(ในกรณีที่เป็น issue ที่เกี่ยวข้องกับ repository ภายนอก ให้ถือว่าทำสำเร็จเมื่อ pull request นั้นถูก merge โดยทีมที่ดูแล repository นั้น ๆ หรือทีมงาน React Bangkok approve โดยการปิด issue)`,
+          `5. หลังจากที่ทำภารกิจเสร็จสิ้น และ issue ของ reactbkk ถูกปิดเรียบร้อย ` +
+            `ให้เข้าไปที่ https://reactbkk.com/3.0.0/#free-tickets เพื่อรับรหัสในการรับบัตรเข้างานฟรี`,
+          `6. สงวนสิทธิ 1 account ต่อ 1 issue เท่านั้น กล่าวคือไม่สามารถเป็นเจ้าของ issue ได้มากกว่า 1 อันในช่วงเวลาใดเวลาหนึ่ง ` +
+            `และไม่สามารถเป็นเจ้าของ issue อื่นได้ หากได้ทำภารกิจสำเร็จไปแล้ว`,
+          '',
+          '<p align="right">connor[bot] is hosted by <a href="https://bangmod.cloud/">Bangmod.Cloud</a>.</p>',
+          '',
+          '<details><summary>Internal state</summary>',
+          '',
+          '```json',
+          JSON.stringify(newDoc.data(), null, 2),
+          '```',
+          '',
+          '</details>'
+        ].join('\n')
+        const oldBody = (await githubClient.get(url)).data.body
+        if (oldBody !== body) {
+          await githubClient.patch(url, {
+            body
+          })
+          log.info('Updated comment.')
+        } else {
+          log.trace('Comment is the same.')
+        }
       }
 
       if (said.length) {
