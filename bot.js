@@ -86,6 +86,8 @@ async function main() {
             `6. สงวนสิทธิ 1 account ต่อ 1 issue เท่านั้น กล่าวคือไม่สามารถเป็นเจ้าของ issue ได้มากกว่า 1 อันในช่วงเวลาใดเวลาหนึ่ง ` +
               `และไม่สามารถเป็นเจ้าของ issue อื่นได้ หากได้ทำภารกิจสำเร็จไปแล้ว`,
             '',
+            '<p align="right">Cloud hosting for this bot is provided by <a href="https://bangmod.cloud/">Bangmod.Cloud</a>.</p>',
+            '',
             '<details><summary>Internal state</summary>',
             '',
             '```json',
