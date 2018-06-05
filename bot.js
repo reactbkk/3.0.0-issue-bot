@@ -271,6 +271,11 @@ async function workOnIssue(
           )
           continue
         }
+        if (active && !active.pullRequest) {
+          say(
+            `@${username} เนื่องจากคุณไม่ได้ยืนยันการจองภายใน 1 ชั่วโมง จึงขอสงวนสิทธิ์มอบหมายงานนี้ให้คนถัดไปนะครับ`
+          )
+        }
         active = {
           username,
           startedAt: new Date().toISOString(),
