@@ -196,11 +196,18 @@ async function workOnIssue(
               `Not adding user @${username} to queue as it is not yet time to start.`
             )
             const startTime = new Date(state.startAt)
-            say(
-              `@${username} Issue นี้ยังไม่เปิดให้จอง ` +
-                `โดยจะเปิดให้จองเมื่อถึงเวลา ${startTime} ` +
-                `กรุณาจองใหม่เมื่อถึงเวลานะครับ ขอบคุณครับ`
-            )
+            if (new Date() >= startTime) {
+              say(
+                `@${username} ตอนที่คุณโพสต์คอมเม้นต์ Issue นี้ยังไม่เปิดให้จอง ` +
+                  `กรุณาจองใหม่นะครับ ขอบคุณครับ`
+              )
+            } else {
+              say(
+                `@${username} Issue นี้ยังไม่เปิดให้จอง ` +
+                  `โดยจะเปิดให้จองเมื่อถึงเวลา ${startTime} ` +
+                  `กรุณาจองใหม่เมื่อถึงเวลานะครับ ขอบคุณครับ`
+              )
+            }
             continue
           }
           if (queuedUsers.includes(username)) {
