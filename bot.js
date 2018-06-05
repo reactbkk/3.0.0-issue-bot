@@ -323,6 +323,19 @@ async function workOnIssue(
       }
     }
 
+    const labelsUrl = `https://api.github.com/repos/${owner}/${repo}/issues/${issue}/labels`
+    /** @type {any[]} */
+    const githubLabels = (await githubClient.get(labelsUrl)).data
+    if (!active || isExpired(active)) {
+      if (!githubLabels.some(l => l.name === 'available')) {
+        await githubClient.post(labelsUrl, ['available'])
+      }
+    } else {
+      if (githubLabels.some(l => l.name === 'available')) {
+        await githubClient.delete(`${labelsUrl}/available`)
+      }
+    }
+
     Object.assign(changes, {
       processedComments,
       queuedUsers,
